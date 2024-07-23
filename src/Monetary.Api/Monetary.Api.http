@@ -1,0 +1,6 @@
+@Monetary.Api_HostAddress = http://localhost:5203
+
+GET {{Monetary.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
