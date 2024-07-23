@@ -19,7 +19,7 @@ public static class GamerResponseResult
 
 public class GamerService
 {
-    public Db1Result<GamerResponse> Handle(int id)
+    public async Task<Db1Result<GamerResponse>> Handle(int id)
     {
         if (id == 0)
             return GamerResponseResult.DescriptionExistente;
@@ -56,11 +56,6 @@ public class Db1Result<TValue>
     public new ErrorReason? Error => _error is ErrorReason error ? error : default;
     public new string Message => _message is string message ? message : default;
     public bool IsSucesso => _error is null && string.IsNullOrEmpty(_message);
-
-    public static implicit operator Db1Result<TValue>(TValue value)
-    {
-        return new Db1Result<TValue>(value);
-    }
 }
 
 public static class Db1Results
@@ -90,12 +85,12 @@ public class GamerServiceUnitTests : UnitTests
     }
 
     [Fact]
-    public void Dado_Id_Igual_0_Then_Handle_Retorna_Falha()
+    public async Task Dado_Id_Igual_0_Then_Handle_Retorna_Falha()
     {
         // Arrange
         int id = 0;
         // Act
-        var response = _sut.Handle(id);
+        var response = await _sut.Handle(id);
         // Assert
         response.Should().NotBeNull();
         response.IsSucesso.Should().BeFalse();
@@ -105,12 +100,12 @@ public class GamerServiceUnitTests : UnitTests
     }
 
     [Fact]
-    public void Dado_Id_Igual_1_Then_Handle_Retorna_Ok()
+    public async Task Dado_Id_Igual_1_Then_Handle_Retorna_Ok()
     {
         // Arrange
         int id = 1;
         // Act
-        var response = _sut.Handle(id);
+        var response = await _sut.Handle(id);
         // Assert
         response.Should().NotBeNull();
         response.IsSucesso.Should().BeTrue();
@@ -119,12 +114,12 @@ public class GamerServiceUnitTests : UnitTests
     }
 
     [Fact]
-    public void Dado_Id_Diferente_0_e_1_Then_Handle_Retorna_NotFound()
+    public async Task Dado_Id_Diferente_0_e_1_Then_Handle_Retorna_NotFound()
     {
         // Arrange
         int id = 2;
         // Act
-        var response = _sut.Handle(id);
+        var response = await _sut.Handle(id);
         // Assert
         response.Should().NotBeNull();
         response.IsSucesso.Should().BeFalse();
